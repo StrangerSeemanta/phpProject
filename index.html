@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <title>Bank Website</title>
+</head>
+<body>
+    <nav>
+        <div class="logo">Earning</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="table.html">My Account</a></li>
+            <li><a href="#card">Card</a></li>
+            <li><a href="#summary">Rewards & Benefits</a></li>
+            
+        </ul>
+        <ul class="nav-btn-holder">
+            <button>Log in</button>
+        </ul>
+    </nav>
+
+    <section>
+        <div class="login-form-holder">
+            <form id="form" action="#" method="post">
+                <h2>Add Earnings</h2>
+
+
+                <label for="order-name">Order Name:</label>
+                <input type="text" id="order-name" name="order-name" required><br>
+
+                <label for="order-id">Order ID:</label>
+                <input type="text" id="order-id" name="order-id" required><br>
+        
+                <label for="earning">Ammount:</label>
+                <input type="number" id="earning" name="earning" required><br>
+                
+                <label for="gig-type">Account Type: </label>
+                <select id="gig-type" name="gig-type">
+                    <option value="gig for parallax_1">Gig for parallax 1</option>
+                    <option value="gig for parallax_2">Gig for parallax 2</option>
+                    <option value="gig for Recreate Website ">Recreate Website</option>
+    
+                </select><br>
+        
+                <div class="remember-check">
+                    <input type="checkbox" id="delivered" name="delivered"><span>Delivery Completed</span>
+
+                </div>
+                <button type="submit">ADD EARN</button><br>
+                
+                <div class="links-holder">
+                    
+                <a href="#">Forgot Password or User ID ?</a><br>
+        
+                <a href="#">Create New Online Account</a><br>
+
+                <a href="#">Confirm Card Received</a><br>
+                <a href="#">Visit our Help and support page.</a>
+                </div>
+            </form>
+        </div>
+        
+    </section>
+</body>
+<script>
+    document.getElementById('form').addEventListener('submit',function(e){
+        e.preventDefault();
+
+        fetch('collector.php',{
+            method:"POST",
+            body: new FormData(this)
+        })
+        .then(r=>{
+            if(r.ok){
+                return r.text();
+            }else{
+                throw new Error('Something Error Occured!!!');
+            }
+        })
+        .catch(e=>{
+            console.log(e);
+        })
+
+        window.location.href = 'table.html';
+    })
+
+    class NavCollapseEffect {
+    constructor(navSelector) {
+        this.navbar = document.querySelector(navSelector)
+        this.getHeight = this.navbar.style.height
+        this.show = this.show
+            this.hide = this.hide
+            this.expand = this.expand
+        }
+
+        show() {
+            this.navbar.classList.remove('hide')
+        }
+
+        hide() {
+            this.navbar.classList.add('hide', 'collapse');
+            
+        }
+
+        expand() {
+            this.navbar.classList.remove('collapse')
+        }
+        init() {
+            Window.prototype.scrollArr = [];
+
+            window.addEventListener('scroll', () => {
+                
+                scrollArr.push(window.scrollY);
+                if (window.scrollY === 0) {
+                    nav.expand()
+                }
+                if (scrollArr[scrollArr.length - 1] > scrollArr[scrollArr.length - 2]) {
+                    nav.hide()
+                } else if (scrollArr[scrollArr.length - 1] < scrollArr[scrollArr.length - 2]) {
+                    nav.show()
+                }
+
+            })
+        }
+    }
+
+    const nav = new NavCollapseEffect('nav')
+    nav.init()
+</script>
+</html>

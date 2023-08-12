@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Transfer Details</title>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">Earning</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="summery.html">My Account</a></li>
+            <li><a href="#card">Card</a></li>
+            <li><a href="#summary">Rewards & Benefits</a></li>
+
+        </ul>
+        <ul class="nav-btn-holder">
+
+        </ul>
+    </nav>
+
+    <section class="personal-savings-head">
+        <div class="container">
+            <div class="head-nav">
+                <div class="headline-container">
+                    <p class="phtext">Personal <span>Savings</span></p>
+                    <p class="actext">Account Management</p>
+                </div>
+
+                <nav>
+                    <ul id="hnavul">
+                        <li class=""><a href="index.html">ADD</a></li>
+                        <li class="active"><a href="table.html">Data</a></li>
+                        <li><a href="#alerts">Alerts</a></li>
+                        <li><a href="#profile">Profile</a></li>
+
+                    </ul>
+                </nav>
+            </div>
+            <div class="profile-info">
+                <p>Welcome, Shuvo Sarker</p>
+                <p>Last Login: 23/07/2023, 12:44p ET</p>
+                <button>Log out</button>
+            </div>
+
+        </div>
+
+        <div class="main-layout">
+            <div class="main-col-1">
+                <div class="welcome-head">
+                    <div class="head">Fiverr Accounts:ssworkmail22@gmail.com (continued)</div>
+                    <div class="body">Here you can see the earning summery from Fiverr.</div>
+                </div>
+
+                <div class="account-table">
+                    <div class="head">Account Activity (continued)</div>
+                    <table id="data-table">
+                        <tbody>
+                            <tr>
+                                <th>Order Name</th>
+                                <th>Order ID</th>
+                                <th>Gig Name</th>
+                                <th>Date</th>
+                                <th>Order Price</th>
+                                <th>My Earn</th>
+                                <th>Status</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="delete-head">
+                    <div class="head">Delete Data From HERE</div>
+                    <div class="body">
+                        <h3>Delete Data: </h3>
+                        <ul id="deleteDataUl">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="main-col-2">
+                <button class="sidebar-btn">Show Account Number</button>
+                <button class="sidebar-btn">Open Account</button>
+                <button class="sidebar-btn">Contact Personal Savings</button>
+                <button class="sidebar-btn">Need Help?</button>
+            </div>
+        </div>
+
+    </section>
+</body>
+
+<script>
+    const headNavUl = document.querySelector('#hnavul');
+    var childs = headNavUl.children
+    for (const x of childs) {
+        x.addEventListener('click', function (event) {
+            for (const y of childs) {
+                y.classList.remove('active');
+            }
+            this.classList.add('active')
+        })
+
+    }
+
+    window.addEventListener('load', function () {
+        reloadTable();
+    })
+
+    function reloadTable() {
+        const table = document.getElementById('data-table');
+        const thead = table.firstElementChild.firstElementChild.cloneNode(true);
+        const head = thead.outerHTML;
+
+        fetch("data.php", {
+                method: "POST"
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error(response.statusText);
+                }
+            })
+            .then(data => {
+                table.innerHTML = head + data;
+                appendDeleteData()
+            })
+            .catch(error => {
+                console.log(error);
+            })
+
+    }
+    window.removeEventListener('load', reloadTable)
+
+    function deleteData(event) {
+        var formData = new FormData();
+        formData.append('fname', event.currentTarget.innerHTML);
+        var msg = `Are you sure? \n this will delete all data of ${event.currentTarget.innerHTML}.`
+        if (confirm(msg)) {
+            fetch('delete.php', {
+                method: "POST",
+                body: formData
+            }).then(r => {
+                if (r.ok) {
+                    return r.text()
+                } else {
+                    throw new Error('Invalid Operation')
+                }
+            }).then(d => {
+                console.log(d);
+                reloadTable()
+            }).catch(e => {
+                console.log(e)
+            })
+        }
+
+    }
+
+    function appendDeleteData() {
+        var onames = document.querySelectorAll('.oname');
+        const ul = document.getElementById('deleteDataUl');
+        ul.innerHTML = '';
+        for (const x of onames) {
+            var childNode = document.createElement('li');
+            childNode.classList.add('dataLi');
+            childNode.innerHTML = x.innerHTML;
+            ul.appendChild(childNode);
+            childNode.addEventListener('click', deleteData)
+        }
+    }
+
+    class NavCollapseEffect {
+        constructor(navSelector) {
+            this.navbar = document.querySelector(navSelector)
+            this.getHeight = this.navbar.style.height
+            this.show = this.show
+            this.hide = this.hide
+            this.expand = this.expand
+
+            this.init();
+
+        }
+
+        show() {
+            this.navbar.classList.remove('hide')
+        }
+
+        hide() {
+            this.navbar.classList.add('hide', 'collapse');
+
+        }
+
+        expand() {
+            this.navbar.classList.remove('collapse')
+        }
+        init() {
+            Window.prototype.scrollArr = [];
+
+            window.addEventListener('scroll', () => {
+
+                scrollArr.push(window.scrollY);
+                if (window.scrollY === 0) {
+                    this.expand()
+                }
+                if (scrollArr[scrollArr.length - 1] > scrollArr[scrollArr.length - 2]) {
+                    this.hide()
+                } else if (scrollArr[scrollArr.length - 1] < scrollArr[scrollArr.length - 2]) {
+                    this.show()
+                }
+
+            })
+        }
+    }
+
+    const navEffect = new NavCollapseEffect('nav')
+</script>
+
+</html>
